@@ -1,0 +1,71 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.nav ul {
+  margin-top: 1.25rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.nav a:link,
+.nav a:visited {
+  text-decoration: none;
+  color: var(--color-light--2);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+
+
+.login a{
+  background-color: var(--color-brand--2);
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  color: var(--color-light--2);
+  font-size: 1.5rem;
+}
+
+.logoContainer {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  text-transform: initial;
+  font-size: 2.4rem;
+  gap: 1.75rem;
+}
+
+.logoContainer img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+/* h2.logoText {
+  font-size: 1rem;
+  color: var(--color-light--2);
+} */
+
+.login a:global(.active) {
+  color: var(--color-brand--2);
+  background-color:transparent;
+  border: 1.25px solid var(--color-brand--2);
+}
+/* CSS Modules feature */
+.nav a:global(.active):not(.login a) {
+  color: var(--color-brand--2);
+}
+
