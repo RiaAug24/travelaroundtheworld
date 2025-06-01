@@ -1,4 +1,3 @@
-import { city } from "../types/types";
 import styles from "./CountryList.module.css";
 import CountryItem from "./CountryItem";
 import Message from "./Message";

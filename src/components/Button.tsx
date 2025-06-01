@@ -1,6 +1,6 @@
 import styles from "./Button.module.css";
-
-export default function Button({ children, onClick, type }) {
+import { ButtonType } from "../types/types";
+export default function Button({ children, onClick, type }: ButtonType) {
   return (
     <button
       className={`${styles.btn} ${

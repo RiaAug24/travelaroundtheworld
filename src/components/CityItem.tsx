@@ -1,6 +1,7 @@
 import styles from "./CityItem.module.css";
 import { city } from "../types/types";
 import { Link } from "react-router";
+import { useCities } from "../context/CityContext";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -11,6 +12,7 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 export default function CityItem({ city }: { city: city }) {
+  const { deleteCity } = useCities();
   return (
     <li>
       <Link
@@ -21,7 +23,15 @@ export default function CityItem({ city }: { city: city }) {
         <h3 className={styles.name}>{city.cityName}</h3>
         <p className={styles.notes}>{city.notes}</p>
         <time className={styles.date}>{formatDate(city.date)}</time>
-        <button className={styles.deleteBtn}>X</button>
+        <button
+          className={styles.deleteBtn}
+          onClick={(e) => {
+            e.preventDefault();
+            deleteCity(city.id);
+          }}
+        >
+          X
+        </button>
       </Link>
     </li>
   );
