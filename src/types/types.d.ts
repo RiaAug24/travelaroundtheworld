@@ -1,25 +1,26 @@
 import emojiFlags from "emoji-flags";
 import City from "../components/City";
-import { FormEventHandler, ReactNode } from "react";
+import { ReactNode } from "react";
 
 export type city = {
-  cityName: string;
-  country: string;
-  emoji: emojiFlags;
-  date: Date | null;
-  notes: string;
-  position: {
-    lat: number;
-    lng: number;
+  cityName?: string;
+  country?: string;
+  emoji?: emojiFlags;
+  date?: Date | null;
+  notes?: string;
+  position?: {
+    lat?: number;
+    lng?: number;
   };
-  id: string;
+  id?: string;
 };
 
 export type CityContexType = {
   cities: City[];
   isLoading: boolean;
-  createCity: (city: city) => Promise<void>,
-  deleteCity: (id: string) => Promise<void>
+  currentCity: city;
+  createCity: (city: city) => Promise<void>;
+  deleteCity: (id: string | undefined) => Promise<void>;
 };
 
 export type ButtonType = {
@@ -27,3 +28,35 @@ export type ButtonType = {
   onClick?: FormEventHandler;
   type: string;
 };
+
+export type userType = {
+  name?: string;
+  email?: string;
+  password?: string | number;
+  avatar?: string;
+};
+
+export type AuthStateType = {
+  user: userType;
+  isAuthenticated: boolean;
+};
+export type AuthConextType = {
+  isAuthenticated: boolean;
+  user: userType;
+  login: (email: string, password: string | number) =>  void;
+  logout: () => void;
+};
+
+export type State = {
+  cities: city[];
+  isLoading: boolean;
+  currentCity: city;
+  error: string;
+};
+
+export type Action =
+  | { type: "loading" }
+  | { type: "cities/loaded"; payload: cities[] }
+  | { type: "cities/created"; payload: city }
+  | { type: "cities/deleted"; payload: city[] }
+  | { type: "rejected"; payload: string };

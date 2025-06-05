@@ -11,36 +11,55 @@ import CountryList from "./components/CountryList";
 import City from "./components/City";
 import Form from "./components/Form";
 import { CityProvider } from "./context/CityContext";
+import { AuthProvider } from "./context/FakeAuthContext";
+import RedirectIfAuth from "./components/RedirectIfAuth";
+import RedirectToLogin from "./components/RedirectToLogin";
 
 function App() {
   return (
-    <CityProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="app" element={<AppLayout />}>
+    <AuthProvider>
+      <CityProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
             <Route
-              index
+              path="/login"
               element={
-                <Navigate replace to="cities" />
-                // <p>
-                //   Welcome to the WorldWise Map, where you can mark the visited
-                //   cities right here!
-                // </p>
+                <RedirectIfAuth>
+                  <Login />
+                </RedirectIfAuth>
               }
             />
-            <Route path="cities" element={<CityList />} />
-            <Route path="cities/:id" element={<City />} />
-            <Route path="countries" element={<CountryList />} />
-            <Route path="form" element={<Form />} />
-          </Route>
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </CityProvider>
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/product" element={<Product />} />
+            <Route
+              path="app"
+              element={
+                <RedirectToLogin>
+                  <AppLayout />
+                </RedirectToLogin>
+              }
+            >
+              <Route
+                index
+                element={
+                  <Navigate replace to="cities" />
+                  // <p>
+                  //   Welcome to the WorldWise Map, where you can mark the visited
+                  //   cities right here!
+                  // </p>
+                }
+              />
+              <Route path="cities" element={<CityList />} />
+              <Route path="cities/:id" element={<City />} />
+              <Route path="countries" element={<CountryList />} />
+              <Route path="form" element={<Form />} />
+            </Route>
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </CityProvider>
+    </AuthProvider>
   );
 }
 
