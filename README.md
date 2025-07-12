@@ -64,6 +64,4 @@ src/
 
 Feel free to submit issues and pull requests.
 
-## License
-
-MIT License
+Edit: This readme describes the older project setup. I will update once I'm done adding backend functionality which will include real User Auth with JWT, separate city list for each unqiue user themself, improved CRUD usage. 
