@@ -132,7 +132,7 @@ exports.Prisma.CityScalarFieldEnum = {
   userId: 'userId'
 };
 
-exports.Prisma.UsersScalarFieldEnum = {
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   email: 'email',
@@ -159,7 +159,7 @@ exports.Prisma.CityOrderByRelevanceFieldEnum = {
   userId: 'userId'
 };
 
-exports.Prisma.UsersOrderByRelevanceFieldEnum = {
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
   id: 'id',
   username: 'username',
   email: 'email',
@@ -170,7 +170,7 @@ exports.Prisma.UsersOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ModelName = {
   City: 'City',
-  Users: 'Users'
+  User: 'User'
 };
 
 /**

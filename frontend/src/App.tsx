@@ -15,8 +15,10 @@ import CountryList from "./components/CountryList";
 import City from "./components/City";
 import Form from "./components/Form";
 import RedirectIfAuth from "./components/RedirectIfAuth";
-import RedirectToLogin from "./components/RedirectToLogin";
 import SpinnerFullPage from "./components/SpinnerFullPage";
+import { ApolloProvider } from "@apollo/client";
+import apolloClient from "./lib/apollo/apolloClient";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Login = lazy(() => import("./pages/Login"));
@@ -27,6 +29,7 @@ const AppLayout = lazy(() => import("./pages/AppLayout"));
 
 function App() {
   return (
+    <ApolloProvider client={apolloClient}>
     <AuthProvider>
       <CityProvider>
         <BrowserRouter>
@@ -46,9 +49,9 @@ function App() {
               <Route
                 path="app"
                 element={
-                  <RedirectToLogin>
+                  <ProtectedRoute>
                     <AppLayout />
-                  </RedirectToLogin>
+                  </ProtectedRoute>
                 }
               >
                 <Route
@@ -72,6 +75,7 @@ function App() {
         </BrowserRouter>
       </CityProvider>
     </AuthProvider>
+    </ApolloProvider>
   );
 }
 

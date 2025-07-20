@@ -3,6 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import prisma from "../prismaClient";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { city, userType } from "../../../types/types";
 
 const typeDefs = `
   type City {
@@ -35,8 +36,8 @@ const typeDefs = `
       emoji: String
       date: String
       notes: String
-      lat: Float!
-      lng: Float!
+      latitude: Float!
+      longitude: Float!
     ): City!
     deleteCity(id: ID!): City!
   }
@@ -76,11 +77,14 @@ const resolvers = {
   },
 
   Mutation: {
-    register: async (_: any, { username, email, password, avatar }: any) => {
-      const hashedPassword = bcrypt.hashSync(password);
+    register: async (
+      _: any,
+      { username, email, password, avatar }: userType
+    ) => {
+      const hashedPassword = bcrypt.hashSync(password as string);
 
       try {
-        const user = await prisma.users.create({
+        const user = await prisma.user.create({
           data: {
             username,
             email,
@@ -90,11 +94,14 @@ const resolvers = {
         });
 
         const token = jwt.sign(
-          { id: user.id },
-          process.env.JWT_SECRET as string,
           {
-            expiresIn: "24h",
-          }
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+          },
+          process.env.JWT_SECRET as string,
+          { expiresIn: "24h" }
         );
 
         return { token };
@@ -105,7 +112,7 @@ const resolvers = {
 
     login: async (_: any, { username, password }: any) => {
       try {
-        const user = await prisma.users.findUnique({
+        const user = await prisma.user.findUnique({
           where: { username },
         });
 
@@ -119,11 +126,14 @@ const resolvers = {
         }
 
         const token = jwt.sign(
-          { id: user.id },
-          process.env.JWT_SECRET as string,
           {
-            expiresIn: "24h",
-          }
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+          },
+          process.env.JWT_SECRET as string,
+          { expiresIn: "24h" }
         );
 
         return { token };
@@ -134,7 +144,7 @@ const resolvers = {
 
     createCity: async (
       _: any,
-      { cityName, country, emoji, date, notes, lat, lng }: any,
+      { cityName, country, emoji, date, notes, latitude, longitude }: city,
       context: Context
     ) => {
       if (!context.userId) {
@@ -149,8 +159,8 @@ const resolvers = {
             emoji,
             date,
             notes,
-            latitude: lat,
-            longitude: lng,
+            latitude,
+            longitude,
             userId: context.userId,
           },
         });

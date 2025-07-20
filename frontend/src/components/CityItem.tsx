@@ -1,5 +1,5 @@
 import styles from "./CityItem.module.css";
-import { city } from "../types/types";
+import { city } from "../../../types/types";
 import { Link } from "react-router";
 import { useCities } from "../context/CityContext";
 

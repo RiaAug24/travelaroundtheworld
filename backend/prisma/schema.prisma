@@ -24,12 +24,12 @@ model City {
   latitude  Float
   longitude Float
   userId    String
-  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("cities")
 }
 
-model Users {
+model User {
   id       String   @id @default(cuid())
   username String   @unique
   email    String

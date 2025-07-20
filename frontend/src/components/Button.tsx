@@ -1,5 +1,5 @@
 import styles from "./Button.module.css";
-import { ButtonType } from "../types/types";
+import { ButtonType } from "../../../types/types";
 export default function Button({ children, onClick, type }: ButtonType) {
   return (
     <button

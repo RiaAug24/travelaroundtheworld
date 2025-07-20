@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import styles from "./City.module.css";
-import { city } from "../types/types";
+import { city } from "../../../types/types";
 import { useCities } from "../context/CityContext";
 import BackButton from "./BackButton";
 

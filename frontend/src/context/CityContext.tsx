@@ -1,17 +1,16 @@
 import React, { createContext, ReactNode, useEffect, useReducer } from "react";
-import { Action, city, CityContexType, State } from "../types/types";
+import {city, CityContexType, State } from "../../../types/types";
 
 const CityContext = createContext<CityContexType>({} as CityContexType);
-const BASE_URL = process.env.BASE_URL;
-
-const initialState: State = {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const initialState = {
   cities: [],
   isLoading: false,
   currentCity: {},
   error: "",
 };
 
-function reducer(state: State, action: Action): State {
+function reducer(state, action): State {
   switch (action.type) {
     case "loading":
       return {

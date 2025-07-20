@@ -11,7 +11,7 @@ import {
 import { LatLngExpression } from "leaflet";
 import { useEffect, useState } from "react";
 import { useCities } from "../context/CityContext";
-import { city } from "../types/types";
+import { city } from "../../../types/types";
 import { useGeolocation } from "../hooks/useGeoLocation";
 import Button from "./Button";
 
