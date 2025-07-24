@@ -1,6 +1,6 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 
-import { useContext, useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 
 import styles from "./Form.module.css";
 import Button from "./Button";
@@ -67,11 +67,8 @@ function Form() {
       emoji,
       date,
       notes,
-      position: {
-        lat,
-        lng,
-      },
-      id: Math.floor(Math.random() * Math.pow(10, 8)).toString(),
+      latitude: lat,
+      longitude: lng
     };
     await createCity(cityData);
     navigate("/app/cities");

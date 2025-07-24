@@ -3,11 +3,11 @@ import City from "../frontend/src/components/City";
 import { ReactNode } from "react";
 
 export type city = {
-  id: string;
+  id?: string;
   cityName: string;
   country: string;
   emoji: emojiFlags;
-  date: Date;
+  date: Date | null;
   notes: string;
   latitude: number;
   longitude: number;
@@ -53,9 +53,9 @@ export type State = {
   error: string;
 };
 
-export type Action =
+export type citiesAction =
   | { type: "loading" }
-  | { type: "cities/loaded"; payload: cities[] }
+  | { type: "cities/loaded"; payload: city[] }
   | { type: "cities/created"; payload: city }
-  | { type: "cities/deleted"; payload: city[] }
+  | { type: "cities/deleted"; payload: city }
   | { type: "rejected"; payload: string };

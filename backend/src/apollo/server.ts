@@ -4,6 +4,7 @@ import prisma from "../prismaClient";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { city, userType } from "../../../types/types";
+import { Context } from "@apollo/client";
 
 const typeDefs = `
   type City {
@@ -24,7 +25,6 @@ const typeDefs = `
 
   type Query {
     getAllCities: [City!]!
-    getUserCities: [City!]!
   }
 
   type Mutation {
@@ -43,35 +43,14 @@ const typeDefs = `
   }
 `;
 
-interface Context {
-  userId?: string;
-}
-
 const resolvers = {
   Query: {
     getAllCities: async () => {
       try {
         const cities = await prisma.city.findMany({});
         return cities;
-      } catch (error) {
+      } catch {
         throw new Error("Failed to fetch cities");
-      }
-    },
-
-    getUserCities: async (_: any, __: any, context: Context) => {
-      if (!context.userId) {
-        throw new Error("Authentication required");
-      }
-
-      try {
-        const cities = await prisma.city.findMany({
-          where: {
-            userId: context.userId,
-          },
-        });
-        return cities;
-      } catch (error) {
-        throw new Error("Failed to fetch user cities");
       }
     },
   },
@@ -84,15 +63,22 @@ const resolvers = {
       const hashedPassword = bcrypt.hashSync(password as string);
 
       try {
-        const user = await prisma.user.create({
-          data: {
-            username,
-            email,
-            password: hashedPassword,
-            avatar,
-          },
+        const userExists = await prisma.user.findUnique({
+          where: { username },
         });
-
+        let user;
+        if (!userExists) {
+          user = await prisma.user.create({
+            data: {
+              username,
+              email,
+              password: hashedPassword,
+              avatar,
+            },
+          });
+        } else {
+          user = userExists;
+        }
         const token = jwt.sign(
           {
             id: user.id,
@@ -106,6 +92,7 @@ const resolvers = {
 
         return { token };
       } catch (error) {
+        console.log(error);
         throw new Error("Registration failed");
       }
     },
@@ -138,6 +125,7 @@ const resolvers = {
 
         return { token };
       } catch (error) {
+        console.log(error);
         throw new Error("Login failed");
       }
     },
@@ -157,7 +145,7 @@ const resolvers = {
             cityName,
             country,
             emoji,
-            date,
+            date: new Date(date as Date),
             notes,
             latitude,
             longitude,
@@ -177,14 +165,15 @@ const resolvers = {
       }
 
       try {
-        const city = await prisma.city.delete({
-          where: {
-            id,
-            userId: context.userId,
-          },
-        });
+        // Find the city first
+        const city = await prisma.city.findUnique({ where: { id } });
+        if (!city || city.userId !== context.userId) {
+          throw new Error("City not found or unauthorized");
+        }
 
-        return city;
+        // Delete by id only
+        const deletedCity = await prisma.city.delete({ where: { id } });
+        return deletedCity;
       } catch (error) {
         throw new Error("Failed to delete city");
       }

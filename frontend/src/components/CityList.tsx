@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import { useCities } from "../context/CityContext";
 
 import CityItem from "./CityItem";
@@ -5,15 +6,17 @@ import styles from "./CityList.module.css";
 import Message from "./Message";
 import Spinner from "./Spinner";
 export default function CityList() {
-  const {cities, isLoading} = useCities();
+  const { user } = useAuth();
+  const { cities, isLoading } = useCities();
+  const userCities = cities && cities.filter((city) => city.userId === user?.id);
   if (isLoading) {
     return <Spinner />;
   }
   return (
     <>
-      {cities.length > 0 ? (
+      {userCities.length > 0 ? (
         <ul className={styles.cityList}>
-          {cities.map((city) => (
+          {userCities?.map((city) => (
             <CityItem key={city.id} city={city} />
           ))}
         </ul>

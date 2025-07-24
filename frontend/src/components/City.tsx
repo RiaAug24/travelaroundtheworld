@@ -3,6 +3,7 @@ import styles from "./City.module.css";
 import { city } from "../../../types/types";
 import { useCities } from "../context/CityContext";
 import BackButton from "./BackButton";
+import { useAuth } from "../context/AuthContext";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -15,9 +16,13 @@ const formatDate = (date) =>
 function City() {
   const { cities } = useCities();
   const { id } = useParams();
+  const { user } = useAuth();
   // console.log(id);
-  let currentCity: city = {};
-  cities.map((city) => {
+  const userCities =
+    cities && cities.filter((city) => city.userId === user?.id);
+
+  let currentCity = {} as city;
+  userCities?.map((city) => {
     console.log(String(city.id) === id);
     if (String(city.id) === id) {
       currentCity = city;

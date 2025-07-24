@@ -6,11 +6,11 @@ import { useNavigate } from "react-router";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
-  
+  const [errorMsg, setErrorMsg] = useState("");
   // Login form state
   const [email, setEmail] = useState("jack@example.com");
   const [password, setPassword] = useState("qwerty");
-  
+
   // Registration form state
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
@@ -18,7 +18,7 @@ export default function Login() {
   const [username, setUserName] = useState("");
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
-  
+
   const { isAuthenticated, login, register } = useAuth();
   const navigate = useNavigate();
 
@@ -32,19 +32,19 @@ export default function Login() {
     const file = e.target.files[0];
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
         return;
       }
-      
+
       // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        alert("File size must be less than 5MB");
         return;
       }
-      
+
       setAvatar(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -54,29 +54,34 @@ export default function Login() {
     }
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (email && password) {
-      login(email, password);
+    setErrorMsg(""); // Clear previous error
+    if (username && password) {
+      try {
+        await login(username, password);
+      } catch (error) {
+        setErrorMsg(error.message); // Show error from AuthContext
+      }
     }
   };
-
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    
+    setErrorMsg("");
+
     // Validation
-    if (!regEmail || !regPassword || ! username) {
-      alert('Please fill in all required fields');
+    if (!regEmail || !regPassword || !username) {
+      alert("Please fill in all required fields");
       return;
     }
-    
+
     if (regPassword !== confirmPassword) {
-      alert('Passwords do not match');
+      alert("Passwords do not match");
       return;
     }
-    
+
     if (regPassword.length < 6) {
-      alert('Password must be at least 6 characters long');
+      alert("Password must be at least 6 characters long");
       return;
     }
 
@@ -91,11 +96,9 @@ export default function Login() {
         });
       }
 
-    
-      register(regEmail, regPassword, username, avatarData as string);
+      await register(username, regEmail, regPassword, avatarData as string);
     } catch (error) {
-      console.error('Registration error:', error);
-      alert('Registration failed. Please try again.');
+      setErrorMsg(error.message); // Show error from AuthContext
     }
   };
 
@@ -125,18 +128,19 @@ export default function Login() {
     <>
       <main className={styles.login}>
         <PageNav />
-        
+
         <div className={styles.authContainer}>
+          {errorMsg && <div className={styles.errorMsg}>{errorMsg}</div>}
           {/* Tab Headers */}
           <div className={styles.tabHeaders}>
-            <button 
-              className={`${styles.tabButton} ${isLogin ? styles.active : ''}`}
+            <button
+              className={`${styles.tabButton} ${isLogin ? styles.active : ""}`}
               onClick={switchToLogin}
             >
               Login
             </button>
-            <button 
-              className={`${styles.tabButton} ${!isLogin ? styles.active : ''}`}
+            <button
+              className={`${styles.tabButton} ${!isLogin ? styles.active : ""}`}
               onClick={switchToRegister}
             >
               Register
@@ -147,12 +151,12 @@ export default function Login() {
           {isLogin && (
             <form className={styles.form} onSubmit={handleLoginSubmit}>
               <div className={styles.row}>
-                <label htmlFor="email">Email address</label>
+                <label htmlFor="email">Enter your username</label>
                 <input
-                  type="email"
-                  id="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
+                  type="text"
+                  id="username"
+                  onChange={(e) => setUserName(e.target.value)}
+                  value={username}
                   required
                 />
               </div>
@@ -180,11 +184,11 @@ export default function Login() {
           {!isLogin && (
             <form className={styles.form} onSubmit={handleRegisterSubmit}>
               <div className={styles.row}>
-                <label htmlFor="username">Full Name</label>
+                <label htmlFor="username">Enter your username</label>
                 <input
                   type="text"
                   id="username"
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e) => setUserName(e.target.value.trim())}
                   value={username}
                   required
                 />
@@ -235,9 +239,9 @@ export default function Login() {
                 />
                 {avatarPreview && (
                   <div className={styles.avatarPreview}>
-                    <img 
-                      src={avatarPreview} 
-                      alt="Profile preview" 
+                    <img
+                      src={avatarPreview}
+                      alt="Profile preview"
                       className={styles.previewImage}
                     />
                   </div>
