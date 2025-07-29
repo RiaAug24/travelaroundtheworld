@@ -127,33 +127,47 @@ function CityProvider({ children }: { children: ReactNode }) {
   );
   const { data } = useQuery(ALL_CITIES_QUERY);
   const [createCityMutation] = useMutation(CREATE_CITY);
-  const [deleteCityMutation] = useMutation(DELETE_CITY);
+  const [deleteCityMutation] = useMutation(DELETE_CITY, {
+    refetchQueries: [{ query: ALL_CITIES_QUERY }],
+    awaitRefetchQueries: true,
+  });
+
   useEffect(() => {
     async function fetchCities() {
-      dispatch({ type: "loading" });
-      try {
-        dispatch({ type: "cities/loaded", payload: data.getAllCities });
-      } catch {
-        dispatch({
-          type: "rejected",
-          payload: "There was an error loading the data",
-        });
+      if (data?.getAllCities) {
+        dispatch({ type: "loading" });
+        try {
+          dispatch({ type: "cities/loaded", payload: data.getAllCities });
+        } catch {
+          dispatch({
+            type: "rejected",
+            payload: "There was an error loading the data",
+          });
+        }
       }
     }
     fetchCities();
-    console.log(cities);
-  }, [cities]);
+  }, [data?.getAllCities]);
 
   async function createCity(newcity: city) {
     dispatch({ type: "loading" });
     try {
+      console.log("Creating city:", newcity);
       const { data } = await createCityMutation({
         variables: {
-          newcity,
+          cityName: newcity.cityName,
+          country: newcity.country,
+          emoji: newcity.emoji,
+          date: newcity.date,
+          notes: newcity.notes,
+          latitude: newcity.latitude,
+          longitude: newcity.longitude,
         },
       });
+      console.log("City created successfully:", data.createCity);
       dispatch({ type: "cities/created", payload: data.createCity });
-    } catch {
+    } catch (error) {
+      console.error("Error creating city:", error);
       dispatch({
         type: "rejected",
         payload: "Error while creating the city!",
@@ -169,12 +183,13 @@ function CityProvider({ children }: { children: ReactNode }) {
           deleteCityId: id,
         },
       });
-      console.log(data.deleteCity);
+      console.log("City deleted:", data.deleteCity);
       dispatch({
         type: "cities/deleted",
         payload: cities.filter((city: city) => city.id != id),
       });
-    } catch {
+    } catch (error) {
+      console.error("Error deleting city:", error);
       dispatch({ type: "rejected", payload: "Error while deleting the city" });
     }
   }

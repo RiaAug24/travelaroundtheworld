@@ -8,16 +8,13 @@ export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
   // Login form state
-  const [email, setEmail] = useState("jack@example.com");
-  const [password, setPassword] = useState("qwerty");
+  const [password, setPassword] = useState<string>();
 
   // Registration form state
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUserName] = useState("");
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
 
   const { isAuthenticated, login, register } = useAuth();
   const navigate = useNavigate();
@@ -28,36 +25,11 @@ export default function Login() {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        alert("Please select an image file");
-        return;
-      }
-
-      // Validate file size (e.g., max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
-        return;
-      }
-
-      setAvatar(file);
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatarPreview(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg(""); // Clear previous error
     if (username && password) {
+      console.log(password)
       try {
         await login(username, password);
       } catch (error) {
@@ -86,19 +58,9 @@ export default function Login() {
     }
 
     try {
-      // Convert avatar to base64 or handle file upload
-      let avatarData = null;
-      if (avatar) {
-        const reader = new FileReader();
-        avatarData = await new Promise((resolve) => {
-          reader.onload = (e) => resolve(e.target.result);
-          reader.readAsDataURL(avatar);
-        });
-      }
-
-      await register(username, regEmail, regPassword, avatarData as string);
+      await register(username, regEmail, regPassword);
     } catch (error) {
-      setErrorMsg(error.message); // Show error from AuthContext
+      console.log(error);
     }
   };
 
@@ -109,19 +71,11 @@ export default function Login() {
     setRegPassword("");
     setConfirmPassword("");
     setUserName("");
-    setAvatar(null);
-    setAvatarPreview(null);
   };
 
   const switchToRegister = () => {
     setIsLogin(false);
     // Clear login form (except dev pre-fill)
-    if (email === "jack@example.com") {
-      setEmail("");
-    }
-    if (password === "qwerty") {
-      setPassword("");
-    }
   };
 
   return (
@@ -156,7 +110,6 @@ export default function Login() {
                   type="text"
                   id="username"
                   onChange={(e) => setUserName(e.target.value)}
-                  value={username}
                   required
                 />
               </div>
@@ -167,7 +120,6 @@ export default function Login() {
                   type="password"
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
-                  value={password}
                   required
                 />
               </div>
@@ -226,26 +178,6 @@ export default function Login() {
                   value={confirmPassword}
                   required
                 />
-              </div>
-
-              <div className={styles.row}>
-                <label htmlFor="avatar">Profile Picture (optional)</label>
-                <input
-                  type="file"
-                  id="avatar"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className={styles.fileInput}
-                />
-                {avatarPreview && (
-                  <div className={styles.avatarPreview}>
-                    <img
-                      src={avatarPreview}
-                      alt="Profile preview"
-                      className={styles.previewImage}
-                    />
-                  </div>
-                )}
               </div>
 
               <div>

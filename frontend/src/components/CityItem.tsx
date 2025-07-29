@@ -3,14 +3,25 @@ import { city } from "../../../types/types";
 import { Link } from "react-router";
 import { useCities } from "../context/CityContext";
 
-const formatDate = (date) =>
-  new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    weekday: "long",
-  }).format(new Date(date));
+function formatDate(dateString: string | null | undefined) {
+  if (!dateString) return 'No date';
 
+  try {
+    const timestamp = Number(dateString);
+    const date = isNaN(timestamp) ? new Date(dateString) : new Date(timestamp);
+
+    if (isNaN(date.getTime())) return 'Invalid date';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  } catch (error) {
+    console.error('Date formatting error:', error);
+    return 'Invalid date';
+  }
+}
 export default function CityItem({ city }: { city: city }) {
   const { currentCity, deleteCity } = useCities();
   return (

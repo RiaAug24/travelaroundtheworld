@@ -26,12 +26,13 @@ function Form() {
   const [cityName, setCityName] = useState("");
   const [country, setCountry] = useState("");
   const [emoji, setEmoji] = useState("");
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date>(new Date());
   const [notes, setNotes] = useState("");
   const BASE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
   const [lat, lng] = useURLPosition();
   const [isGeoMapLoading, setIsGeoMapLoading] = useState(false);
   const [geoMapLoadingErr, setGeoMapLoadingErr] = useState<string | null>(null);
+  
   useEffect(() => {
     async function fetchCityData() {
       if (!lat && !lng) return;
@@ -43,9 +44,9 @@ function Form() {
           throw new Error("Not appears to be a city. Click somewhere else. 😉");
 
         setGeoMapLoadingErr("");
-        setCityName(data.city);
-        setCountry(data.countryName);
-        setEmoji(data.countryCode);
+        setCityName(data.city || data.locality || "Unknown City");
+        setCountry(data.countryName || "Unknown Country");
+        setEmoji(convertToEmoji(data.countryCode));
         console.log(data);
       } catch (error) {
         setGeoMapLoadingErr(
@@ -61,17 +62,31 @@ function Form() {
 
   async function handleSubmitFunction(e) {
     e.preventDefault();
+    
+    if (!lat || !lng || !cityName || !country) {
+      alert("Please make sure all required fields are filled");
+      return;
+    }
+
     const cityData = {
-      cityName,
-      country,
-      emoji,
-      date,
-      notes,
-      latitude: lat,
-      longitude: lng
+      cityName: cityName.trim(),
+      country: country.trim(),
+      emoji: emoji || "🏙️", // Always provide emoji since it's required in database
+      date: date.toISOString(),
+      notes: notes.trim(),
+      latitude: parseFloat(lat.toString()),
+      longitude: parseFloat(lng.toString())
     };
-    await createCity(cityData);
-    navigate("/app/cities");
+    
+    console.log("Form submitting with data:", cityData);
+    
+    try {
+      await createCity(cityData);
+      navigate("/app/cities");
+    } catch (error) {
+      console.error("Error creating city:", error);
+      alert("Failed to create city. Please try again.");
+    }
   }
 
   if (isGeoMapLoading) {
@@ -90,11 +105,12 @@ function Form() {
       onSubmit={(e) => handleSubmitFunction(e)}
     >
       <div className={styles.row}>
-        <label htmlFor="cityName">{cityName}</label>
+        <label htmlFor="cityName">City name</label>
         <input
           id="cityName"
           onChange={(e) => setCityName(e.target.value)}
           value={cityName}
+          required
         />
         <span className={styles.flag}>{emoji}</span>
       </div>
@@ -103,9 +119,17 @@ function Form() {
         <label htmlFor="date">When did you go to {cityName}?</label>
         <DatePicker
           id="date"
-          onChange={(date) => setDate(date)}
+          onChange={(selectedDate: Date | null) => {
+            if (selectedDate) {
+              setDate(selectedDate);
+            }
+          }}
           selected={date}
-          dateFormat={"dd/MM/yyyy"}
+          dateFormat="dd/MM/yyyy"
+          maxDate={new Date()}
+          showYearDropdown
+          showMonthDropdown
+          dropdownMode="select"
         />
       </div>
 
@@ -115,6 +139,7 @@ function Form() {
           id="notes"
           onChange={(e) => setNotes(e.target.value)}
           value={notes}
+          placeholder="Add some notes about your visit..."
         />
       </div>
 

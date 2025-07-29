@@ -2000,7 +2000,6 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
-    avatar: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2008,7 +2007,6 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
-    avatar: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2016,7 +2014,6 @@ export namespace Prisma {
     username: number
     email: number
     password: number
-    avatar: number
     _all: number
   }
 
@@ -2026,7 +2023,6 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
-    avatar?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2034,7 +2030,6 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
-    avatar?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2042,7 +2037,6 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
-    avatar?: true
     _all?: true
   }
 
@@ -2123,7 +2117,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2148,7 +2141,6 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
-    avatar?: boolean
     Cities?: boolean | User$CitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -2160,10 +2152,9 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
-    avatar?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "password" | "avatar", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "password", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Cities?: boolean | User$CitiesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2179,7 +2170,6 @@ export namespace Prisma {
       username: string
       email: string
       password: string
-      avatar: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2554,7 +2544,6 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
-    readonly avatar: FieldRef<"User", 'String'>
   }
     
 
@@ -2973,8 +2962,7 @@ export namespace Prisma {
     id: 'id',
     username: 'username',
     email: 'email',
-    password: 'password',
-    avatar: 'avatar'
+    password: 'password'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -3012,8 +3000,7 @@ export namespace Prisma {
     id: 'id',
     username: 'username',
     email: 'email',
-    password: 'password',
-    avatar: 'avatar'
+    password: 'password'
   };
 
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -3141,7 +3128,6 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    avatar?: StringNullableFilter<"User"> | string | null
     Cities?: CityListRelationFilter
   }
 
@@ -3150,7 +3136,6 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    avatar?: SortOrderInput | SortOrder
     Cities?: CityOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
@@ -3163,7 +3148,6 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
-    avatar?: StringNullableFilter<"User"> | string | null
     Cities?: CityListRelationFilter
   }, "id" | "username">
 
@@ -3172,7 +3156,6 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    avatar?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -3186,7 +3169,6 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
-    avatar?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type CityCreateInput = {
@@ -3277,7 +3259,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar?: string | null
     Cities?: CityCreateNestedManyWithoutUserInput
   }
 
@@ -3286,7 +3267,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar?: string | null
     Cities?: CityUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -3295,7 +3275,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     Cities?: CityUpdateManyWithoutUserNestedInput
   }
 
@@ -3304,7 +3283,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
     Cities?: CityUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -3313,7 +3291,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -3321,7 +3298,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -3329,7 +3305,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3533,7 +3508,6 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    avatar?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -3541,7 +3515,6 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    avatar?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -3549,7 +3522,6 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
-    avatar?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutCitiesInput = {
@@ -3773,7 +3745,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar?: string | null
   }
 
   export type UserUncheckedCreateWithoutCitiesInput = {
@@ -3781,7 +3752,6 @@ export namespace Prisma {
     username: string
     email: string
     password: string
-    avatar?: string | null
   }
 
   export type UserCreateOrConnectWithoutCitiesInput = {
@@ -3805,7 +3775,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateWithoutCitiesInput = {
@@ -3813,7 +3782,6 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CityCreateWithoutUserInput = {

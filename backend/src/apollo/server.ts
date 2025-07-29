@@ -4,7 +4,10 @@ import prisma from "../prismaClient";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { city, userType } from "../../../types/types";
-import { Context } from "@apollo/client";
+
+interface ServerContext {
+  userId?: string;
+}
 
 const typeDefs = `
   type City {
@@ -14,8 +17,8 @@ const typeDefs = `
     emoji: String
     date: String
     notes: String
-    latitude: Float
-    longitude: Float
+    latitude: Float!
+    longitude: Float!
     userId: String!
   }
 
@@ -45,46 +48,48 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    getAllCities: async () => {
+    getAllCities: async (_: any, __: any, context: ServerContext) => {
+      console.log("Fetching all cities for user:", context.userId);
+      
       try {
-        const cities = await prisma.city.findMany({});
+        const cities = await prisma.city.findMany({
+          where: context.userId ? { userId: context.userId } : {},
+          orderBy: { date: 'desc' }
+        });
+        console.log("Fetched cities:", cities.length);
         return cities;
-      } catch {
+      } catch (error) {
+        console.error("Error fetching cities:", error);
         throw new Error("Failed to fetch cities");
       }
     },
   },
 
   Mutation: {
-    register: async (
-      _: any,
-      { username, email, password, avatar }: userType
-    ) => {
+    register: async (_: any, { username, email, password }: userType) => {
       const hashedPassword = bcrypt.hashSync(password as string);
 
       try {
         const userExists = await prisma.user.findUnique({
           where: { username },
         });
-        let user;
-        if (!userExists) {
-          user = await prisma.user.create({
-            data: {
-              username,
-              email,
-              password: hashedPassword,
-              avatar,
-            },
-          });
-        } else {
-          user = userExists;
+        
+        if (userExists) {
+          throw new Error("Username already exists!");
         }
+
+        const user = await prisma.user.create({
+          data: {
+            username,
+            email,
+            password: hashedPassword,
+          },
+        });
+
         const token = jwt.sign(
           {
             id: user.id,
             username: user.username,
-            email: user.email,
-            avatar: user.avatar,
           },
           process.env.JWT_SECRET as string,
           { expiresIn: "24h" }
@@ -92,8 +97,8 @@ const resolvers = {
 
         return { token };
       } catch (error) {
-        console.log(error);
-        throw new Error("Registration failed");
+        console.error("Registration error:", error);
+        throw new Error(error.message || "Registration failed");
       }
     },
 
@@ -117,7 +122,6 @@ const resolvers = {
             id: user.id,
             username: user.username,
             email: user.email,
-            avatar: user.avatar,
           },
           process.env.JWT_SECRET as string,
           { expiresIn: "24h" }
@@ -125,63 +129,98 @@ const resolvers = {
 
         return { token };
       } catch (error) {
-        console.log(error);
-        throw new Error("Login failed");
+        console.error("Login error:", error);
+        throw new Error(error.message || "Login failed");
       }
     },
 
     createCity: async (
       _: any,
       { cityName, country, emoji, date, notes, latitude, longitude }: city,
-      context: Context
+      context: ServerContext
     ) => {
+      console.log("=== CREATE CITY RESOLVER ===");
+      console.log("Context userId:", context.userId);
+      console.log("Input data:", { cityName, country, emoji, date, notes, latitude, longitude });
+      
       if (!context.userId) {
         throw new Error("Authentication required");
       }
 
       try {
-        const city = await prisma.city.create({
-          data: {
-            cityName,
-            country,
-            emoji,
-            date: new Date(date as Date),
-            notes,
-            latitude,
-            longitude,
-            userId: context.userId,
-          },
+        // Validate required fields
+        if (!cityName || !country || latitude === undefined || longitude === undefined) {
+          throw new Error("Missing required fields: cityName, country, latitude, longitude");
+        }
+
+        // Prepare city data with proper types
+        const cityData = {
+          cityName: cityName.trim(),
+          country: country.trim(),
+          emoji: emoji || "🏙️",
+          date: date ? new Date(date) : new Date(),
+          notes: notes && notes.trim() ? notes.trim() : null,
+          latitude: parseFloat(latitude.toString()),
+          longitude: parseFloat(longitude.toString()),
+          userId: context.userId,
+        };
+
+        console.log("Prepared city data:", cityData);
+        console.log("Date object:", cityData.date);
+        console.log("Date ISO string:", cityData.date.toISOString());
+
+        const newCity = await prisma.city.create({
+          data: cityData,
         });
 
-        return city;
+        console.log("City created successfully:", newCity);
+        return newCity;
       } catch (error) {
-        throw new Error("Failed to create city");
+        console.error("Error creating city:", error);
+        console.error("Error details:", error.message);
+        throw new Error(`Failed to create city: ${error.message}`);
       }
     },
 
-    deleteCity: async (_: any, { id }: any, context: Context) => {
+    deleteCity: async (_: any, { id }: any, context: ServerContext) => {
+      console.log("=== DELETE CITY RESOLVER ===");
+      console.log("Context userId:", context.userId);
+      console.log("City ID to delete:", id);
+      
       if (!context.userId) {
         throw new Error("Authentication required");
       }
 
       try {
-        // Find the city first
-        const city = await prisma.city.findUnique({ where: { id } });
-        if (!city || city.userId !== context.userId) {
-          throw new Error("City not found or unauthorized");
+        // Find the city first to verify ownership
+        const existingCity = await prisma.city.findUnique({ 
+          where: { id } 
+        });
+        
+        if (!existingCity) {
+          throw new Error("City not found");
+        }
+        
+        if (existingCity.userId !== context.userId) {
+          throw new Error("Unauthorized: You can only delete your own cities");
         }
 
-        // Delete by id only
-        const deletedCity = await prisma.city.delete({ where: { id } });
+        // Delete the city
+        const deletedCity = await prisma.city.delete({ 
+          where: { id } 
+        });
+        
+        console.log("City deleted successfully:", deletedCity);
         return deletedCity;
       } catch (error) {
-        throw new Error("Failed to delete city");
+        console.error("Error deleting city:", error);
+        throw new Error(`Failed to delete city: ${error.message}`);
       }
     },
   },
 };
 
-const server = new ApolloServer<Context>({
+const server = new ApolloServer<ServerContext>({
   typeDefs,
   resolvers,
 });
@@ -191,6 +230,7 @@ async function startServer() {
     listen: { port: 8383 },
     context: async ({ req }) => {
       const token = req.headers.authorization?.replace("Bearer ", "");
+      console.log("Authorization token:", token ? "Present" : "Not present");
 
       if (token) {
         try {
@@ -198,8 +238,10 @@ async function startServer() {
             token,
             process.env.JWT_SECRET as string
           ) as { id: string };
+          console.log("Decoded user ID:", decoded.id);
           return { userId: decoded.id };
         } catch (error) {
+          console.error("JWT verification failed:", error);
           return {};
         }
       }

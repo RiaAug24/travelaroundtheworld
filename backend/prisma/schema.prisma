@@ -34,7 +34,6 @@ model User {
   username String   @unique
   email    String
   password String
-  avatar String? @db.LongText
   Cities   City[]
 
   @@map("users")

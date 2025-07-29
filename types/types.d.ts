@@ -7,7 +7,7 @@ export type city = {
   cityName: string;
   country: string;
   emoji: emojiFlags;
-  date: Date | null;
+  date: string;
   notes: string;
   latitude: number;
   longitude: number;
@@ -31,7 +31,6 @@ export type userType = {
   username: string;
   email: string;
   password: string | number;
-  avatar: string;
 };
 
 

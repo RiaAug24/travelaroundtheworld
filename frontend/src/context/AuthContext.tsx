@@ -4,8 +4,8 @@ import { gql } from "@apollo/client";
 
 // GraphQL mutations
 const REGISTER_MUTATION = gql`
-  mutation Register($username: String!, $email: String!, $password: String!, $avatar: String) {
-    register(username: $username, email: $email, password: $password, avatar: $avatar) {
+  mutation Register($username: String!, $email: String!, $password: String!,) {
+    register(username: $username, email: $email, password: $password) {
       token
     }
   }
@@ -24,7 +24,6 @@ interface User {
   id: string;
   username: string;
   email: string;
-  avatar?: string;
 }
 
 interface AuthState {
@@ -39,7 +38,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, avatar?: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -109,7 +108,6 @@ function decodeToken(token: string): User | null {
       id: payload.id,
       username: payload.username || 'User',
       email: payload.email || '',
-      avatar: payload.avatar,
     };
   } catch (error) {
     console.error('Error decoding token:', error);
@@ -153,12 +151,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     checkAuthStatus();
   }, []);
 
-  const register = async (username: string, email: string, password: string, avatar?: string) => {
+  const register = async (username: string, email: string, password: string) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       
       const { data } = await registerMutation({
-        variables: { username, email, password, avatar }
+        variables: { username, email, password }
       });
 
       const token = data.register.token;
