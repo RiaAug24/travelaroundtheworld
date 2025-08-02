@@ -54,7 +54,7 @@ npm run dev
 
 ```
 backend/
-  prisma/        # Prisma Schema definations
+  prisma/              # Prisma Schema definations
   src/
     ├── apollo/        # Apollo server and GraphQL API setup
 frontend/
