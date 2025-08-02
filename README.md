@@ -8,7 +8,7 @@ A React application that helps you track and memorialize your travels around the
 - 📍 Mark and track visited places
 - ✏️ Add notes and details about each location
 - 🗑️ Remove visited places
-- 🔐 User authentication system
+- 🔐 JWT based User authentication system
 - 📍 Geolocation support to find your current position
 
 ## Tech Stack
