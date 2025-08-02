@@ -8,8 +8,7 @@ A React application that helps you track and memorialize your travels around the
 - 📍 Mark and track visited places
 - ✏️ Add notes and details about each location
 - 🗑️ Remove visited places
-- 📱 Responsive design
-- 🔐 User authentication system (demo)
+- 🔐 User authentication system
 - 📍 Geolocation support to find your current position
 
 ## Tech Stack
@@ -43,7 +42,7 @@ npm run dev
 
 1. Log in using the demo credentials
 2. Navigate the world map
-3. Click anywhere on the map to add a new location
+3. Click any city on the map to add a new location
 4. Fill in details about your visit
 5. View your visited places in the sidebar
 6. Use the "Use Your Position" button to center the map on your current location
@@ -51,17 +50,21 @@ npm run dev
 ## Project Structure
 
 ```
-src/
-  ├── components/     # React components
-  ├── context/       # Context providers
-  ├── hooks/         # Custom hooks
-  ├── pages/         # Route components
-  ├── types/         # TypeScript types
-  └── styles/        # CSS modules
+backend/
+    ├── prisma/        # Prisma Schema definations
+  src/
+    ├── apollo/        # Apollo server and GraphQL API setup
+frontend/
+  src/
+    ├── components/     # React components
+    ├── context/       # Context providers
+    ├── hooks/         # Custom hooks
+    ├── pages/         # Route components
+    ├── styles/        # CSS modules
+types/                 # TypeScript types
+
 ```
 
-## Contributing
 
-Feel free to submit issues and pull requests.
-
-Edit: This readme describes the older project setup. I will update once I'm done adding backend functionality which will include real User Auth with JWT, separate city list for each unqiue user themself, improved CRUD usage. 
+Note:
+Currently this webiste only runs well on medium & larger screens only as I have not made it responsive yet 😝...
