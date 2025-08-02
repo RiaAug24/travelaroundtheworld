@@ -20,6 +20,8 @@ A React application that helps you track and memorialize your travels around the
 - Leaflet Maps
 - CSS Modules
 - Context API for state management
+- Node.js Backend + GraphQL API
+- Primsa ORM + MySQL DB
 
 ## Getting Started
 
@@ -56,7 +58,7 @@ backend/
     ├── apollo/        # Apollo server and GraphQL API setup
 frontend/
   src/
-    ├── components/     # React components
+    ├── components/    # React components
     ├── context/       # Context providers
     ├── hooks/         # Custom hooks
     ├── pages/         # Route components
