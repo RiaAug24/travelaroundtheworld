@@ -42,12 +42,13 @@ npm run dev
 
 ## Usage
 
-1. Log in using the demo credentials
+1.Register/login into your account
 2. Navigate the world map
 3. Click any city on the map to add a new location
 4. Fill in details about your visit
-5. View your visited places in the sidebar
-6. Use the "Use Your Position" button to center the map on your current location
+5. Use the "Use Your Position" button to center the map on your current location
+6. View your visited places in the sidebar
+7. You can see other people's marked places on the map as well.
 
 ## Project Structure
 
