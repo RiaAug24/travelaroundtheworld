@@ -1,8 +1,15 @@
-.login {
+.authLayout {
   margin: 2.5rem;
   padding: 2.5rem 5rem;
   background-color: var(--color-dark--1);
   height: calc(100vh - 5rem);
+}
+
+.authContainer {
+  margin: 2em auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .form {
@@ -52,11 +59,13 @@
 
 .tabHeaders {
   display: flex;
+  width: 55%;
   margin-bottom: 2rem;
 }
 
 .tabButton {
   flex: 1;
+  color: #eaeaea;
   padding: 1rem;
   border: none;
   background: transparent;
@@ -66,6 +75,7 @@
 
 .tabButton.active {
   border-bottom-color: var(--color-brand--2);
+  color: #f0b40e;
   font-weight: bold;
 }
 

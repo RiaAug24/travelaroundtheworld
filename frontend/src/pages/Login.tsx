@@ -80,7 +80,7 @@ export default function Login() {
 
   return (
     <>
-      <main className={styles.login}>
+      <main className={styles.authLayout}>
         <PageNav />
 
         <div className={styles.authContainer}>
