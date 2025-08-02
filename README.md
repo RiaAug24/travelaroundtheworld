@@ -42,7 +42,7 @@ npm run dev
 
 ## Usage
 
-1.Register/login into your account
+1. Register/login into your account
 2. Navigate the world map
 3. Click any city on the map to add a new location
 4. Fill in details about your visit
