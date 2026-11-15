@@ -21,7 +21,7 @@ A React application that helps you track and memorialize your travels around the
 - CSS Modules
 - Context API for state management
 - Node.js Backend + GraphQL API
-- Primsa ORM + MySQL DB
+- Primsa ORM + Postgres DB
 
 ## Getting Started
 
